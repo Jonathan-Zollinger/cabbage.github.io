@@ -37,7 +37,7 @@ public class Main {
                 responseContent.append(line);
             }
             reader.close();
-            System.out.print(responseContent.toString());
+            System.out.print(responseContent);
         } catch (MalformedURLException malformedURLException) {
             malformedURLException.printStackTrace();
         } catch (IOException ioException){
@@ -58,7 +58,7 @@ public class Main {
     public static String readFile(String filePath){
         StringBuilder contentBuilder = new StringBuilder();
         try (Stream<String> stream = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)) {
-            stream.forEach(string -> contentBuilder.append(string).append("\n"));
+            stream.forEach(contentBuilder::append);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
