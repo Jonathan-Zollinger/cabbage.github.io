@@ -1,3 +1,8 @@
+import canvasWrapper.CanvasAssignment;
+import canvasWrapper.CanvasObject;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,40 +16,47 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.stream.Stream;
 
 public class Main {
     private static HttpURLConnection connection;
 
     public static void main(String[] args) {
-        BufferedReader reader;
-        String line;
-        String token = readFile( "src/canvas token.txt");
-        StringBuilder responseContent = new StringBuilder();
-        try{
-            URL url = new URL("https://ensign.instructure.com/api/v1/courses/8166/assignments");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Accept","application/json");
-            connection.setRequestProperty("Authorization", "Bearer " + token);
-            int status = connection.getResponseCode();
+        CanvasObject canvasObject = new CanvasAssignment("courses");
+        System.out.print(canvasObject);
+//        BufferedReader reader;
+//        String line;
+//        String token = readFile( "src/canvas token.txt");
+//        StringBuilder responseContent = new StringBuilder();
+//        try{
+//            URL url = new URL("https://ensign.instructure.com/api/v1/courses/8166/assignments");
+//            connection = (HttpURLConnection) url.openConnection();
+//            connection.setRequestProperty("Accept","application/json");
+//            connection.setRequestProperty("Authorization", "Bearer " + token);
+//            int status = connection.getResponseCode();
+//
+//            if (status > 299){
+//                reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+//            }else{
+//                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            }
+//            while((line = reader.readLine()) != null){
+//                responseContent.append(line);
+//            }
+//            reader.close();
+//            System.out.print(responseContent);
+//        } catch (IOException malformedURLException) {
+//            malformedURLException.printStackTrace();
+//        }
+//        connection.disconnect();
+//        JSONObject jo = new JSONObject(responseContent);
+//        String statusLine = jo.getJSONObject("statusLine").toString();
+//        JSONArray jsonObjects = new JSONArray(responseContent);
 
-            if (status > 299){
-                reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-            }else{
-                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            }
-            while((line = reader.readLine()) != null){
-                responseContent.append(line);
-            }
-            reader.close();
-            System.out.print(responseContent);
-        } catch (MalformedURLException malformedURLException) {
-            malformedURLException.printStackTrace();
-        } catch (IOException ioException){
-            ioException.printStackTrace();
-        }
-        connection.disconnect();
+
     }//end main
+
 
     public static String parseCanvasAssignment(String responseBody){
         //TODO - figure proper data types for imported values

@@ -1,3 +1,7 @@
+import canvasWrapper.CanvasAssignment;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -13,14 +17,16 @@ class CanvasAssignmentTest {
     private static HttpURLConnection connection;
     private static BufferedReader reader;
     private static String line;
-    private static String token = "2974~T6Q3ivuaNG9SMki9kUKbLcLu9EUvpaeGeTW6vQDNS0ajYScRU3kp7ue2ZAhtcdZE";
-    private static StringBuilder responseContent = new StringBuilder();
+    private static JSONArray jsonObjects;
 
-    private static void setJsonObject() {
+    @BeforeEach
+    private void setJsonObject() {
+        StringBuilder responseContent = new StringBuilder();
         try {
             URL url = new URL("https://ensign.instructure.com/api/v1/courses/8166/assignments");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Accept", "application/json");
+            String token = "2974~T6Q3ivuaNG9SMki9kUKbLcLu9EUvpaeGeTW6vQDNS0ajYScRU3kp7ue2ZAhtcdZE";
             connection.setRequestProperty("Authorization", "Bearer " + token);
             int status = connection.getResponseCode();
 
@@ -33,18 +39,28 @@ class CanvasAssignmentTest {
                 responseContent.append(line);
             }
             reader.close();
-            System.out.print(responseContent.toString());
-        } catch (MalformedURLException malformedURLException) {
+            System.out.print(responseContent);
+        } catch (IOException malformedURLException) {
             malformedURLException.printStackTrace();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
         }
         connection.disconnect();
+        jsonObjects = new JSONArray(responseContent);
     }
-    @Test
-    void setDescription() {
-
-    }
+//    @Test
+//    void setDescription() {
+//        String description = "<h2>Instructions</h2>\\n<p>Please take the following Cloud Essentials Pre-assessment Test before coming to the first day of class. It’s okay if you don’t know the answers yet. In fact, it will give you a chance to realize what you don’t know and to recognize what you will need to know about the cloud. You will receive full credit just for submitting the quiz; however, we encourage you to take it as many times as you want until you are satisfied with your knowledge.&nbsp;</p>\\n<h2>Grading</h2>\\n<p>This quiz is worth two points. You will receive full credit for taking and submitting this quiz.</p>";
+//        for(Object object:jsonObjects){
+//            JSONObject jsonObject = (JSONObject) object;
+//            if (jsonObject.getString("name")
+//                    .equalsIgnoreCase("1.2 Prepare: Cloud Essentials Pre-Test ")){
+//                CanvasAssignment canvasAssignment = new CanvasAssignment();
+//                canvasAssignment.setDescription(jsonObject);
+//                assertEquals(CanvasAssignment.getDescription(), description);
+//            }
+//
+//            }
+//
+//    }
 
     @Test
     void setDueAt() {
