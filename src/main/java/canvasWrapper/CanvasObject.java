@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class CanvasObject {
@@ -30,6 +31,7 @@ public abstract class CanvasObject {
     private String access_restricted_by_date;
     private final Logger log = LogManager.getLogger(this.getClass());
     private Response response;
+    private JSONArray jsonObjects;
 
     /* ----------------------------------------------- Constructors ----------------------------------------------- */
     public CanvasObject(String URI) {
@@ -96,18 +98,17 @@ public abstract class CanvasObject {
         return Published;
     }//end isPublished()
 
-    public abstract HashMap<String,Object> getProperties();
-//    {
-//        HashMap<String,Object> properties = new HashMap<>();
-//        Field[] fields = this.getClass().getDeclaredFields();
-//        Arrays.stream(fields).forEach(field -> {
-//            try {
-//                properties.put(field.getName(),field.get(this));
-//            } catch (IllegalAccessException illegalAccessException) {
-//                log.warn(String.format("failed to add the %s field to the properties map.",field.getName()));
-//            }});
-//        return properties;
-//    }
+    public HashMap<String,Object> getProperties(){
+        HashMap<String,Object> properties = new HashMap<>();
+        Field[] fields = this.getClass().getDeclaredFields();
+        Arrays.stream(fields).forEach(field -> {
+            try {
+                properties.put(field.getName(),field.get(this));
+            } catch (IllegalAccessException illegalAccessException) {
+                log.warn(String.format("failed to add the %s field to the properties map.",field.getName()));
+            }});
+        return properties;
+    }
     public abstract String toString();
 
     /* -------------------------------------------------- Setters -------------------------------------------------- */
@@ -184,8 +185,7 @@ public abstract class CanvasObject {
                 .addHeader("Cookie", headerValue)
                 .build();//TODO: make addHeader() cleaner
         response = client.newCall(request).execute();
-        JSONArray jsonObjects = new JSONArray(request);
-
+        jsonObjects = new JSONArray(request);
     }//end makeGetRequest()
 
     /**
