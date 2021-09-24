@@ -1,3 +1,5 @@
+package CanvasWrapper;
+
 import java.time.OffsetDateTime;
 
 public class CanvasObject {
